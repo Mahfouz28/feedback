@@ -75,8 +75,7 @@ class FeedbackPageState extends State<FeedbackPage> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 32),
-                const SizedBox(height: 100),
+                const SizedBox(height: 80),
                 // Suggestions Text Area
                 const Text(
                   'ملاحظاتك / اقتراحاتك',
