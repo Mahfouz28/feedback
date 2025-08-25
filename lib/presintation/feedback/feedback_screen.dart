@@ -10,22 +10,16 @@ class FeedbackPage extends StatefulWidget {
 }
 
 class FeedbackPageState extends State<FeedbackPage> {
-  String _selectedFeedbackType = 'شيء ما ليس على ما يرام';
   final TextEditingController suggestionController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
-  final List<String> _feedbackTypes = [
-    'شكوى',
-    'شيء ما ليس على ما يرام',
-    'اقتراح',
-    'كل شئ على ما يرام',
-  ];
+  int _selectedEmoji = 3; // ⭐️ لتخزين التقييم الافتراضي
+  final Color mainColor = const Color(0xFFCD9300); // اللون الرئيسي الجديد
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:
-          Colors.grey[100], // Softer background for better contrast
+      backgroundColor: Colors.grey[100],
       body: SafeArea(
         child: Directionality(
           textDirection: TextDirection.rtl,
@@ -47,7 +41,7 @@ class FeedbackPageState extends State<FeedbackPage> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                // Emoji Feedback with improved styling
+                // Emoji Feedback
                 Container(
                   padding: const EdgeInsets.all(16.0),
                   decoration: BoxDecoration(
@@ -55,7 +49,6 @@ class FeedbackPageState extends State<FeedbackPage> {
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        // ignore: deprecated_member_use
                         color: Colors.black.withOpacity(0.2),
                         blurRadius: 5,
                         offset: const Offset(0, 3),
@@ -63,65 +56,27 @@ class FeedbackPageState extends State<FeedbackPage> {
                     ],
                   ),
                   child: EmojiFeedback(
-                    initialRating: 3,
+                    initialRating: _selectedEmoji,
                     animDuration: const Duration(milliseconds: 300),
                     curve: Curves.easeInOut,
                     inactiveElementScale: .7,
-                    onChanged: (value) {},
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedEmoji = value!;
+                      });
+                    },
                     onChangeWaitForAnimation: true,
+                    customLabels: const [
+                      "سيئ جداً",
+                      "سيئ",
+                      "عادي",
+                      "جيد",
+                      "ممتاز",
+                    ],
                   ),
                 ),
                 const SizedBox(height: 32),
-                // Feedback Type Section
-                const Text(
-                  'يرجى اختيار فئة ملاحظاتك',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black87,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Wrap(
-                  spacing: 12,
-                  runSpacing: 12,
-                  children:
-                      _feedbackTypes.map((category) {
-                        return ChoiceChip(
-                          label: Text(category),
-                          selected: _selectedFeedbackType == category,
-                          selectedColor: Colors.orangeAccent,
-                          backgroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 10,
-                          ),
-                          labelStyle: TextStyle(
-                            color:
-                                _selectedFeedbackType == category
-                                    ? Colors.white
-                                    : Colors.black87,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            side: BorderSide(
-                              color:
-                                  _selectedFeedbackType == category
-                                      ? Colors.orangeAccent
-                                      : Colors.grey[300]!,
-                            ),
-                          ),
-                          onSelected: (selected) {
-                            setState(() {
-                              _selectedFeedbackType = category;
-                            });
-                          },
-                        );
-                      }).toList(),
-                ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 100),
                 // Suggestions Text Area
                 const Text(
                   'ملاحظاتك / اقتراحاتك',
@@ -141,7 +96,7 @@ class FeedbackPageState extends State<FeedbackPage> {
                   ),
                 ),
                 const SizedBox(height: 40),
-                // Submit Button with Gradient
+                // Submit Button
                 Center(
                   child: SizedBox(
                     height: 56,
@@ -150,6 +105,9 @@ class FeedbackPageState extends State<FeedbackPage> {
                       onPressed: () {
                         if (formKey.currentState!.validate() &&
                             suggestionController.text.isNotEmpty) {
+                          print("التقييم: $_selectedEmoji");
+                          print("الملاحظات: ${suggestionController.text}");
+
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
@@ -166,7 +124,6 @@ class FeedbackPageState extends State<FeedbackPage> {
                                     ),
                                   ],
                                 ),
-
                                 content: const Text(
                                   'تم إرسال ملاحظاتك بنجاح! شكراً لك',
                                 ),
@@ -175,7 +132,9 @@ class FeedbackPageState extends State<FeedbackPage> {
                                     onPressed: () => Navigator.pop(context),
                                     child: const Text(
                                       'حسناً',
-                                      style: TextStyle(color: Colors.black),
+                                      style: TextStyle(
+                                        color: Color(0xFFCD9300),
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -195,15 +154,8 @@ class FeedbackPageState extends State<FeedbackPage> {
                         ),
                         elevation: 5,
                         shadowColor: Colors.black.withOpacity(0.9),
-                        backgroundColor: Colors.transparent,
+                        backgroundColor: mainColor, // اللون الرئيسي هنا
                         foregroundColor: Colors.white,
-                      ).copyWith(
-                        backgroundColor: WidgetStateProperty.resolveWith(
-                          (states) => Colors.orangeAccent,
-                        ),
-                        overlayColor: WidgetStateProperty.resolveWith(
-                          (states) => Colors.orange[700],
-                        ),
                       ),
                       child: const Center(
                         child: Text(
@@ -218,82 +170,11 @@ class FeedbackPageState extends State<FeedbackPage> {
                     ),
                   ),
                 ),
-
                 const SizedBox(height: 20),
               ],
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-// Custom RatingStars Widget (Improved)
-class RatingStars extends StatefulWidget {
-  final double rating;
-  final Function(double) onRatingChanged;
-
-  const RatingStars({
-    super.key,
-    required this.rating,
-    required this.onRatingChanged,
-  });
-
-  @override
-  _RatingStarsState createState() => _RatingStarsState();
-}
-
-class _RatingStarsState extends State<RatingStars>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<double> _animation;
-
-  @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 300),
-    );
-    _animation = Tween<double>(begin: 0.7, end: 1).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
-    );
-    _animationController.forward();
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FadeTransition(
-      opacity: _animation,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: List.generate(5, (index) {
-          return GestureDetector(
-            onTap: () {
-              widget.onRatingChanged(index + 1);
-              _animationController.reset();
-              _animationController.forward();
-            },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 6.0),
-              child: ScaleTransition(
-                scale: _animation,
-                child: Icon(
-                  index < widget.rating ? Icons.star : Icons.star_border,
-                  color: Colors.amber[600],
-                  size: 40,
-                ),
-              ),
-            ),
-          );
-        }),
       ),
     );
   }

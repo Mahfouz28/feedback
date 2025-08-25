@@ -14,6 +14,8 @@ class CustomTextFormField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Color mainColor = const Color(0xFFCD9300); // اللون الرئيسي الجديد
+
     return TextFormField(
       controller: controller,
       maxLines: maxLines,
@@ -41,7 +43,7 @@ class CustomTextFormField extends StatelessWidget {
         // الحدود عند الفوكس
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Colors.orange, width: .5),
+          borderSide: BorderSide(color: mainColor, width: .5),
         ),
 
         // الحدود عند الخطأ
@@ -53,7 +55,7 @@ class CustomTextFormField extends StatelessWidget {
         // الحدود عند الخطأ + فوكس
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Colors.orange, width: 2),
+          borderSide: BorderSide(color: mainColor, width: 2),
         ),
       ),
     );
