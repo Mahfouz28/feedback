@@ -1,6 +1,7 @@
 import 'package:feedback/presintation/feedback/widgets/suggetion_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_emoji_feedback/flutter_emoji_feedback.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class FeedbackPage extends StatefulWidget {
   const FeedbackPage({super.key});
@@ -15,6 +16,23 @@ class FeedbackPageState extends State<FeedbackPage> {
 
   int _selectedEmoji = 3; // ⭐️ لتخزين التقييم الافتراضي
   final Color mainColor = const Color(0xFFCD9300); // اللون الرئيسي الجديد
+  final String url = "https://egyharmony.com";
+
+  Future<void> _launchURL() async {
+    final Uri uri = Uri.parse(url);
+
+    // تحقق إن المتصفح يستطيع فتح الرابط قبل التنفيذ
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(
+        uri,
+        mode: LaunchMode.externalApplication, // يفتح الرابط في المتصفح الخارجي
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('لا يمكن فتح الرابط حالياً')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +59,6 @@ class FeedbackPageState extends State<FeedbackPage> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                // Emoji Feedback
                 Container(
                   padding: const EdgeInsets.all(16.0),
                   decoration: BoxDecoration(
@@ -76,7 +93,6 @@ class FeedbackPageState extends State<FeedbackPage> {
                   ),
                 ),
                 const SizedBox(height: 80),
-                // Suggestions Text Area
                 const Text(
                   'ملاحظاتك / اقتراحاتك',
                   style: TextStyle(
@@ -95,7 +111,6 @@ class FeedbackPageState extends State<FeedbackPage> {
                   ),
                 ),
                 const SizedBox(height: 40),
-                // Submit Button
                 Center(
                   child: SizedBox(
                     height: 56,
@@ -153,7 +168,7 @@ class FeedbackPageState extends State<FeedbackPage> {
                         ),
                         elevation: 5,
                         shadowColor: Colors.black.withOpacity(0.9),
-                        backgroundColor: mainColor, // اللون الرئيسي هنا
+                        backgroundColor: mainColor,
                         foregroundColor: Colors.white,
                       ),
                       child: const Center(
@@ -169,7 +184,26 @@ class FeedbackPageState extends State<FeedbackPage> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 100),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextButton(
+                      style: TextButton.styleFrom(padding: EdgeInsets.zero),
+
+                      onPressed: _launchURL,
+                      child: Text(
+                        "egyharmony.com",
+                        style: TextStyle(
+                          color: mainColor,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    const Text("© 2025 All Rights Reserved | Designed by"),
+                  ],
+                ),
               ],
             ),
           ),
