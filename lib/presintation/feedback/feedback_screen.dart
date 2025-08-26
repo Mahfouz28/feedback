@@ -29,7 +29,22 @@ class FeedbackPageState extends State<FeedbackPage> {
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('لا يمكن فتح الرابط حالياً')),
+        SnackBar(
+          content: Row(
+            children: const [
+              Icon(Icons.error_outline, color: Colors.white),
+              SizedBox(width: 8),
+              Text('لا يمكن فتح الرابط حالياً'),
+            ],
+          ),
+          backgroundColor: Colors.redAccent,
+          behavior: SnackBarBehavior.floating,
+          margin: const EdgeInsets.all(16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          duration: const Duration(seconds: 3),
+        ),
       );
     }
   }
@@ -185,24 +200,33 @@ class FeedbackPageState extends State<FeedbackPage> {
                   ),
                 ),
                 const SizedBox(height: 100),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    TextButton(
-                      style: TextButton.styleFrom(padding: EdgeInsets.zero),
+                Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          overlayColor: mainColor,
+                        ),
 
-                      onPressed: _launchURL,
-                      child: Text(
-                        "egyharmony.com",
-                        style: TextStyle(
-                          color: mainColor,
-                          decoration: TextDecoration.underline,
+                        onPressed: _launchURL,
+                        child: Text(
+                          " egyharmony.com",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: mainColor,
+                            decoration: TextDecoration.underline,
+                          ),
                         ),
                       ),
-                    ),
-                    const SizedBox(width: 8),
-                    const Text("© 2025 All Rights Reserved | Designed by"),
-                  ],
+                      const Text(
+                        " 2025 All Rights Reserved | Designed by ©",
+                        style: TextStyle(fontSize: 14),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
